@@ -1,0 +1,48 @@
+{
+  "v": "HBCE-EVIDENCE-CONTRACT-1",
+  "required": {
+    "v": "string",
+    "request_id": "uuid",
+    "ipr_subject": "string",
+    "ts": {
+      "start": "iso8601",
+      "end": "iso8601"
+    },
+    "policy": {
+      "id": "string",
+      "version": "string",
+      "result": "PASS|DENY",
+      "reasons": "string[]"
+    },
+    "gate": {
+      "result": "ALLOW|DENY",
+      "reasons": "string[]"
+    },
+    "hashes": {
+      "input_hash": "sha256",
+      "plan_hash": "sha256|null",
+      "output_hash": "sha256|null"
+    },
+    "exec": {
+      "status": "OK|SKIPPED|ERROR",
+      "tool_trace": "string[]",
+      "error": "string|null",
+      "rollback": "string|null"
+    },
+    "chain": {
+      "prev_entry_hash": "sha256|GENESIS",
+      "entry_hash": "sha256",
+      "height": "integer"
+    },
+    "sig": {
+      "alg": "ed25519",
+      "by": "JOKER-C2",
+      "value": "base64"
+    }
+  },
+  "rules": [
+    "If gate.result == DENY then exec.status MUST be SKIPPED",
+    "entry_hash MUST be sha256(canonical_json_without_entry_hash)",
+    "Undefined fields MUST NOT relax validation (fail-closed)"
+  ]
+}
