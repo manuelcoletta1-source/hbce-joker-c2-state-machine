@@ -1,0 +1,57 @@
+{
+  "v": "HBCE-JOKER-C2-SM-1",
+  "id": "JOKER-C2",
+  "model": "DETERMINISTIC_STATE_MACHINE",
+  "defaults": {
+    "policy": "FAIL_CLOSED",
+    "evidence": "REQUIRED"
+  },
+  "states": [
+    "INIT",
+    "REQUEST_RECEIVED",
+    "POLICY_EVALUATION",
+    "GATE_DECISION",
+    "EXECUTION_ALLOWED",
+    "EXECUTION_DENIED",
+    "EXECUTION_COMPLETED",
+    "EVIDENCE_RECORDED",
+    "ERROR",
+    "ROLLBACK"
+  ],
+  "events": [
+    "REQUEST_SUBMITTED",
+    "POLICY_PASS",
+    "POLICY_DENY",
+    "GATE_ALLOW",
+    "GATE_DENY",
+    "EXEC_OK",
+    "EXEC_FAIL",
+    "EVIDENCE_COMMITTED",
+    "ROLLBACK_OK",
+    "ROLLBACK_FAIL"
+  ],
+  "transitions": [
+    { "from": "INIT", "event": "REQUEST_SUBMITTED", "to": "REQUEST_RECEIVED" },
+
+    { "from": "REQUEST_RECEIVED", "event": "POLICY_PASS", "to": "POLICY_EVALUATION" },
+    { "from": "REQUEST_RECEIVED", "event": "POLICY_DENY", "to": "EXECUTION_DENIED" },
+
+    { "from": "POLICY_EVALUATION", "event": "GATE_ALLOW", "to": "EXECUTION_ALLOWED" },
+    { "from": "POLICY_EVALUATION", "event": "GATE_DENY", "to": "EXECUTION_DENIED" },
+
+    { "from": "EXECUTION_ALLOWED", "event": "EXEC_OK", "to": "EXECUTION_COMPLETED" },
+    { "from": "EXECUTION_ALLOWED", "event": "EXEC_FAIL", "to": "ERROR" },
+
+    { "from": "EXECUTION_DENIED", "event": "EVIDENCE_COMMITTED", "to": "EVIDENCE_RECORDED" },
+
+    { "from": "EXECUTION_COMPLETED", "event": "EVIDENCE_COMMITTED", "to": "EVIDENCE_RECORDED" },
+
+    { "from": "ERROR", "event": "ROLLBACK_OK", "to": "ROLLBACK" },
+    { "from": "ERROR", "event": "ROLLBACK_FAIL", "to": "ROLLBACK" }
+  ],
+  "invariants": [
+    "All executions MUST end in EVIDENCE_RECORDED (PASS or DENY).",
+    "Any undefined transition MUST be treated as DENY.",
+    "FAIL_CLOSED is mandatory: absence of ALLOW proof => DENY."
+  ]
+}
