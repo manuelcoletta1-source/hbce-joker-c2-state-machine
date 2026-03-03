@@ -29,22 +29,36 @@ It serves as the formal specification layer between:
 
 ---
 
-## Canonical High-Level States
+## Contents
 
-- `INIT`
-- `REQUEST_RECEIVED`
-- `POLICY_EVALUATION`
-- `GATE_DECISION`
-- `EXECUTION_ALLOWED`
-- `EXECUTION_DENIED`
-- `EXECUTION_COMPLETED`
-- `EVIDENCE_RECORDED`
-- `ERROR`
-- `ROLLBACK`
+- `machine/machine.json` — states, events, transitions
+- `machine/guards.md` — normative guard conditions (fail-closed)
+- `machine/evidence_contract.json` — minimum evidence fields contract
+- `docs/links.md` — spec ↔ core ↔ registry map
+- `tools/verify-genesis.sh` — verifies GENESIS sha256 + signature
 
-The state machine is normative.
-Implementations must conform.
+---
+
+## Quickstart: Verify Registry GENESIS
+
+Clone the registry repo next to this repo, then run:
+
+```bash
+bash tools/verify-genesis.sh ../hbce-joker-c2-registry
+
+Expected output includes:
+
+PASS: sha256 match
+
+PASS: signature valid
+
+
+If any check fails, treat the registry as invalid (fail-closed).
+
 
 ---
 
 HBCE — HERMETICUM B.C.E. S.r.l.
+
+---
+
