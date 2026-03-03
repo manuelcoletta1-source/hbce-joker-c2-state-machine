@@ -37,11 +37,13 @@
     "sig": {
       "alg": "ed25519",
       "by": "JOKER-C2",
+      "key_sha256": "sha256",
       "value": "base64"
     }
   },
   "rules": [
     "If gate.result == DENY then exec.status MUST be SKIPPED",
+    "sig.key_sha256 MUST match the sha256 fingerprint of the public key used for verification",
     "entry_hash MUST be sha256(canonical_json_without_entry_hash)",
     "Undefined fields MUST NOT relax validation (fail-closed)"
   ]
